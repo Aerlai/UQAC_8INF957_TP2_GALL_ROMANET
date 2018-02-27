@@ -1,6 +1,9 @@
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
-public class PigeonSquare extends JFrame {
+public class PigeonSquare extends Observable implements Observer {
     // Attributs
     private int tailleX = 500;
     private int tailleY = 500;
@@ -16,32 +19,27 @@ public class PigeonSquare extends JFrame {
 
     public PigeonSquare(){
         // Creation des pigeons
-        Pigeon p1 = new Pigeon(10, 10);
+        Pigeon p1 = new Pigeon(5, 100, 1);
+        Pigeon p2 = new Pigeon(16, 20, 2);
+
+        // Création des observers
+        p1.addObserver(this);
+        p2.addObserver(this);
 
         // Création des threads des pigeons
         Thread t1 = new Thread(p1);
-
-        // Initialisation du canvas
-        initUi();
-
-
-
+        t1.start();
+        Thread t2 = new Thread(p2);
+        t2.start();
     }
 
-    private void initUi(){
-        this.setSize(this.tailleX, this.tailleY);
-        this.setTitle("Pigeon Square");
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setLocationRelativeTo(null);
-        this.setResizable(false);
-        //On initialise le conteneur avec tous les composants
-        initComposant();
-        //On ajoute le conteneur
-        this.setContentPane(container);
-        this.setVisible(true);
+    // Observer
+    @Override
+    public void update(Observable o, Object arg) {
+        if(o instanceof Pigeon){
+            //System.out.println("notif recue");
+            ArrayList v = (ArrayList)arg;
+            System.out.println("Pigeon " + v.get(2) + " ; posX : " + v.get(0) + " ; posY : " + v.get(1) );
+        }
     }
-
-    private void initComposant() {
-    }
-
 }
