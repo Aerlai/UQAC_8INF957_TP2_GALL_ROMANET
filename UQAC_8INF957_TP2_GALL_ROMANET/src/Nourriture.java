@@ -12,6 +12,14 @@ public class Nourriture {
 
     // Getters
 
+    public int getPosX() {
+        return posX;
+    }
+
+    public int getPosY() {
+        return posY;
+    }
+
     // Setter
 
     // Methode
