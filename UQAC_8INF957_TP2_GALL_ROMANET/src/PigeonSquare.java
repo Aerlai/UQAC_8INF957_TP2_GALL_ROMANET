@@ -1,13 +1,15 @@
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Random;
 
 public class PigeonSquare extends Observable implements Observer {
     // Attributs
     private int tailleX = 500; // taille du square en X
     private int tailleY = 500; // taille du square en Y
     private ArrayList<Nourriture> nourritureTab = new ArrayList();
+    private ArrayList<Pigeon> pigeonTab = new ArrayList();
+    private ArrayList<Thread> threadTab = new ArrayList();
 
     // Getters
 
@@ -15,13 +17,21 @@ public class PigeonSquare extends Observable implements Observer {
 
     // Constructeur
     public PigeonSquare(){
-        // Pigeon 1
-        Pigeon p1 = new Pigeon(0, 0, 1, this);
-        p1.addObserver(this);
-        Thread t1 = new Thread(p1);
-        t1.start();
+        creerPigeonThread(1);
 
 
+    }
+
+    private void creerPigeonThread(int nbrePigeon){
+        Random ran = new Random();
+        for(int i = 0 ; i < nbrePigeon; i++){
+            int x = ran.nextInt(tailleX) + 0;
+            int y = ran.nextInt(tailleY) + 0;
+            pigeonTab.add(new Pigeon(x,y,i,this));
+            pigeonTab.get(i).addObserver(this);
+            threadTab.add(new Thread(pigeonTab.get(i)));
+            threadTab.get(i).start();
+        }
     }
 
     public void start(){
@@ -30,10 +40,9 @@ public class PigeonSquare extends Observable implements Observer {
 
     // Methode
     public void ajouterNourriture(int x, int y){
-        Nourriture n = new Nourriture(x,y);
-        nourritureTab.add(n);
+        nourritureTab.add(new Nourriture(x,y));
         this.setChanged();
-        this.notifyObservers(n);
+        this.notifyObservers(nourritureTab.get(nourritureTab.size()-1));
     }
 
     // Observer

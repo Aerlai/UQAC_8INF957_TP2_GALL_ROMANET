@@ -69,7 +69,7 @@ public class Pigeon extends Observable implements Runnable, Observer {
             // On dirige le pigeon vers la nourriture
             int xCible = nourritureTab.get(curseur).getPosX();
             int yCible = nourritureTab.get(curseur).getPosY();
-            while (this.posX != xCible && this.posY != yCible) {// TODO : ajouter une condition nourriture gatée
+            while (this.posX != xCible || this.posY != yCible) {// TODO : ajouter une condition nourriture gatée
                 deplacerPigeonPas(xCible,yCible);
                 this.setChanged();
                 this.notifyObservers(this);
@@ -105,9 +105,7 @@ public class Pigeon extends Observable implements Runnable, Observer {
     // Observer
     @Override
     public void update(Observable o, Object arg) {
-        System.out.println("test");
         if(o instanceof PigeonSquare){
-            System.out.println("New food");
             nourritureTab.add((Nourriture) arg);
             rechercherNourriture();
         }

@@ -8,6 +8,7 @@ public class Nourriture {
     public Nourriture(int x, int y){
         this.posX = x;
         this.posY = y;
+        System.out.println("nouvelle nourriture : "+this.posX +";"+this.posY);
     }
 
     // Getters
