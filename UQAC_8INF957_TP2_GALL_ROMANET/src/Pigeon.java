@@ -12,10 +12,11 @@ public class Pigeon extends Observable implements Runnable, Observer {
     private int vitesse = 100;
 
     // Constructeur
-    Pigeon(int x, int y, int id){
+    Pigeon(int x, int y, int id, PigeonSquare parent){
         this.posX = x;
         this.posY = y;
         this.id = id;
+        parent.addObserver(this);
     }
 
     // getters
@@ -39,6 +40,16 @@ public class Pigeon extends Observable implements Runnable, Observer {
         System.out.println("Création d'un thread pour pigeon " + id);
         this.setChanged();
         this.notifyObservers(this);
+        synchronized (this){
+            while(true){
+                try {
+                    this.wait(vitesse);
+                    //System.out.println("test");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     private void rechercherNourriture(){
@@ -54,6 +65,7 @@ public class Pigeon extends Observable implements Runnable, Observer {
                     distance = v;
                 }
             }
+
             // On dirige le pigeon vers la nourriture
             int xCible = nourritureTab.get(curseur).getPosX();
             int yCible = nourritureTab.get(curseur).getPosY();
@@ -93,6 +105,7 @@ public class Pigeon extends Observable implements Runnable, Observer {
     // Observer
     @Override
     public void update(Observable o, Object arg) {
+        System.out.println("test");
         if(o instanceof PigeonSquare){
             System.out.println("New food");
             nourritureTab.add((Nourriture) arg);

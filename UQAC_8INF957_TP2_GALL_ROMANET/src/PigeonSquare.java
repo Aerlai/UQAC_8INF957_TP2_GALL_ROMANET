@@ -9,10 +9,6 @@ public class PigeonSquare extends Observable implements Observer {
     private int tailleY = 500; // taille du square en Y
     private ArrayList<Nourriture> nourritureTab = new ArrayList();
 
-
-    // variables interface
-    private JPanel container = new JPanel();
-
     // Getters
 
     // Setter
@@ -20,11 +16,15 @@ public class PigeonSquare extends Observable implements Observer {
     // Constructeur
     public PigeonSquare(){
         // Pigeon 1
-        Pigeon p1 = new Pigeon(0, 0, 1);
+        Pigeon p1 = new Pigeon(0, 0, 1, this);
         p1.addObserver(this);
         Thread t1 = new Thread(p1);
         t1.start();
 
+
+    }
+
+    public void start(){
         ajouterNourriture(100, 100);
     }
 
