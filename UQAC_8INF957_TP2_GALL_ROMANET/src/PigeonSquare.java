@@ -2,14 +2,19 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class PigeonSquare extends Observable implements Observer {
     // Attributs
-    private int tailleX = 500; // taille du square en X
-    private int tailleY = 500; // taille du square en Y
+    private int nombreDePigeon = 2;
+    private int tailleX = 100; // taille du square en X
+    private int tailleY = 100; // taille du square en Y
     private ArrayList<Nourriture> nourritureTab = new ArrayList();
     private ArrayList<Pigeon> pigeonTab = new ArrayList();
     private ArrayList<Thread> threadTab = new ArrayList();
+    private ExecutorService executor = Executors.newSingleThreadExecutor();
 
     // Getters
 
@@ -17,7 +22,8 @@ public class PigeonSquare extends Observable implements Observer {
 
     // Constructeur
     public PigeonSquare(){
-        creerPigeonThread(1);
+
+        creerPigeonThread(nombreDePigeon);
 
 
     }
@@ -31,11 +37,13 @@ public class PigeonSquare extends Observable implements Observer {
             pigeonTab.get(i).addObserver(this);
             threadTab.add(new Thread(pigeonTab.get(i)));
             threadTab.get(i).start();
+            //executor.execute(pigeonTab.get(i));
         }
     }
 
     public void start(){
-        ajouterNourriture(100, 100);
+        ajouterNourriture(0, 0);
+        //ajouterNourriture(100, 100);
     }
 
     // Methode
@@ -49,8 +57,10 @@ public class PigeonSquare extends Observable implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         if(o instanceof Pigeon){
-            Pigeon p = (Pigeon)arg;
-            System.out.println("Pigeon " + p.getId() + " ; posX : " + p.getPosX()+ " ; posY : " + p.getPosY());
+            executor.submit(() -> {
+                Pigeon p = (Pigeon)arg;
+                System.out.println("Pigeon " + p.getId() + " ; posX : " + p.getPosX()+ " ; posY : " + p.getPosY());
+            });
         }
     }
 }

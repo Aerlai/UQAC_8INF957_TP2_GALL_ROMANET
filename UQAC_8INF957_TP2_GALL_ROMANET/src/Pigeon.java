@@ -1,7 +1,9 @@
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
-import  java.lang.*;
+import java.lang.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Pigeon extends Observable implements Runnable, Observer {
     // Attributs
@@ -10,9 +12,10 @@ public class Pigeon extends Observable implements Runnable, Observer {
     private int id;
     private ArrayList<Nourriture> nourritureTab = new ArrayList();
     private int vitesse = 100;
+    private ExecutorService executor = Executors.newSingleThreadExecutor();
 
     // Constructeur
-    Pigeon(int x, int y, int id, PigeonSquare parent){
+    Pigeon(int x, int y, int id, PigeonSquare parent) {
         this.posX = x;
         this.posY = y;
         this.id = id;
@@ -40,8 +43,8 @@ public class Pigeon extends Observable implements Runnable, Observer {
         System.out.println("Création d'un thread pour pigeon " + id);
         this.setChanged();
         this.notifyObservers(this);
-        synchronized (this){
-            while(true){
+/*        synchronized (this) {
+            while (true) {
                 try {
                     this.wait(vitesse);
                     //System.out.println("test");
@@ -49,12 +52,12 @@ public class Pigeon extends Observable implements Runnable, Observer {
                     e.printStackTrace();
                 }
             }
-        }
+        }*/
     }
 
-    private void rechercherNourriture(){
+    private void rechercherNourriture() {
         // On vérifie si il y a de la nourriture de disponible
-        if(nourritureTab.size() >0) {
+        if (nourritureTab.size() > 0) {
             // Choix de la nouriture la plus proche
             int curseur = 0;
             double distance = 99999999; // On initialise à l'infini
@@ -69,16 +72,13 @@ public class Pigeon extends Observable implements Runnable, Observer {
             // On dirige le pigeon vers la nourriture
             int xCible = nourritureTab.get(curseur).getPosX();
             int yCible = nourritureTab.get(curseur).getPosY();
-            while (this.posX != xCible || this.posY != yCible) {// TODO : ajouter une condition nourriture gatée
-                deplacerPigeonPas(xCible,yCible);
+            while (this.posX != xCible || this.posY != yCible) { // TODO : ajouter une condition nourriture gatée
+                deplacerPigeonPas(xCible, yCible);
                 this.setChanged();
                 this.notifyObservers(this);
-                try
-                {
+                try {
                     Thread.sleep(vitesse);
-                }
-                catch(InterruptedException ex)
-                {
+                } catch (InterruptedException ex) {
                     Thread.currentThread().interrupt();
                 }
             }
@@ -86,17 +86,17 @@ public class Pigeon extends Observable implements Runnable, Observer {
     }
 
     // Fonction de recherche du pigeon le plus proche.
-    private double calculDistance(int xa, int ya, int xb, int yb){
-        return Math.sqrt((xb-xa)*(xb-xa)+(yb-ya)*(yb-ya));
+    private double calculDistance(int xa, int ya, int xb, int yb) {
+        return Math.sqrt((xb - xa) * (xb - xa) + (yb - ya) * (yb - ya));
     }
 
     // Méthode de déplacement du pigeon d'un pas.
-    private void deplacerPigeonPas(int xCible, int yCible){
-        if(this.posX != xCible){
-            if(this.posX < xCible) this.posX++;
+    private void deplacerPigeonPas(int xCible, int yCible) {
+        if (this.posX != xCible) {
+            if (this.posX < xCible) this.posX++;
             else this.posX--;
         }
-        if(this.posY != yCible) {
+        if (this.posY != yCible) {
             if (this.posY < yCible) this.posY++;
             else this.posY--;
         }
@@ -105,9 +105,11 @@ public class Pigeon extends Observable implements Runnable, Observer {
     // Observer
     @Override
     public void update(Observable o, Object arg) {
-        if(o instanceof PigeonSquare){
-            nourritureTab.add((Nourriture) arg);
-            rechercherNourriture();
+        if (o instanceof PigeonSquare) {
+            executor.submit(() -> {
+                nourritureTab.add((Nourriture) arg);
+                rechercherNourriture();
+            });
         }
 
     }
