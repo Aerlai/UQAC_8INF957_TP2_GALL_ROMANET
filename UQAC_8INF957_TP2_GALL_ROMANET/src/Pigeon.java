@@ -13,6 +13,7 @@ public class Pigeon extends Observable implements Runnable, Observer {
     private ArrayList<Nourriture> nourritureTab = new ArrayList();
     private int vitesse = 100;
     private ExecutorService executor = Executors.newSingleThreadExecutor();
+    private boolean rechercheActive = false;
 
     // Constructeur
     Pigeon(int x, int y, int id, PigeonSquare parent) {
@@ -57,7 +58,9 @@ public class Pigeon extends Observable implements Runnable, Observer {
 
     private void rechercherNourriture() {
         // On vérifie si il y a de la nourriture de disponible
-        if (nourritureTab.size() > 0) {
+        int xCible;
+        int yCible;
+        do {
             // Choix de la nouriture la plus proche
             int curseur = 0;
             double distance = 99999999; // On initialise à l'infini
@@ -70,9 +73,9 @@ public class Pigeon extends Observable implements Runnable, Observer {
             }
 
             // On dirige le pigeon vers la nourriture
-            int xCible = nourritureTab.get(curseur).getPosX();
-            int yCible = nourritureTab.get(curseur).getPosY();
-            while (this.posX != xCible || this.posY != yCible) { // TODO : ajouter une condition nourriture gatée
+            xCible = nourritureTab.get(curseur).getPosX();
+            yCible = nourritureTab.get(curseur).getPosY();
+
                 deplacerPigeonPas(xCible, yCible);
                 this.setChanged();
                 this.notifyObservers(this);
@@ -81,8 +84,8 @@ public class Pigeon extends Observable implements Runnable, Observer {
                 } catch (InterruptedException ex) {
                     Thread.currentThread().interrupt();
                 }
-            }
-        }
+            }while (this.posX != xCible || this.posY != yCible); // TODO : ajouter une condition nourriture gatée
+            rechercheActive = false;
     }
 
     // Fonction de recherche du pigeon le plus proche.
@@ -106,10 +109,14 @@ public class Pigeon extends Observable implements Runnable, Observer {
     @Override
     public void update(Observable o, Object arg) {
         if (o instanceof PigeonSquare) {
-            executor.submit(() -> {
-                nourritureTab.add((Nourriture) arg);
-                rechercherNourriture();
-            });
+            nourritureTab.add((Nourriture) arg);
+            if(rechercheActive == false){
+                rechercheActive = true;
+                executor.submit(() -> {
+                    rechercherNourriture();
+                });
+            }
+
         }
 
     }

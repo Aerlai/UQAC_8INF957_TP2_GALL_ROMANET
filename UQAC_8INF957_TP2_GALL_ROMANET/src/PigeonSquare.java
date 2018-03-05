@@ -21,19 +21,19 @@ public class PigeonSquare extends Observable implements Observer {
     // Setter
 
     // Constructeur
-    public PigeonSquare(){
+    public PigeonSquare() {
 
         creerPigeonThread(nombreDePigeon);
 
 
     }
 
-    private void creerPigeonThread(int nbrePigeon){
+    private void creerPigeonThread(int nbrePigeon) {
         Random ran = new Random();
-        for(int i = 0 ; i < nbrePigeon; i++){
+        for (int i = 0; i < nbrePigeon; i++) {
             int x = ran.nextInt(tailleX) + 0;
             int y = ran.nextInt(tailleY) + 0;
-            pigeonTab.add(new Pigeon(x,y,i,this));
+            pigeonTab.add(new Pigeon(x, y, i, this));
             pigeonTab.get(i).addObserver(this);
             threadTab.add(new Thread(pigeonTab.get(i)));
             threadTab.get(i).start();
@@ -41,25 +41,29 @@ public class PigeonSquare extends Observable implements Observer {
         }
     }
 
-    public void start(){
-        ajouterNourriture(0, 0);
-        //ajouterNourriture(100, 100);
+    public void start() {
+        executor.submit(() -> {
+            ajouterNourriture(0, 0);
+        });
+        executor.submit(() -> {
+            ajouterNourriture(100, 100);
+        });
     }
 
     // Methode
-    public void ajouterNourriture(int x, int y){
-        nourritureTab.add(new Nourriture(x,y));
+    public void ajouterNourriture(int x, int y) {
+        nourritureTab.add(new Nourriture(x, y));
         this.setChanged();
-        this.notifyObservers(nourritureTab.get(nourritureTab.size()-1));
+        this.notifyObservers(nourritureTab.get(nourritureTab.size() - 1));
     }
 
     // Observer
     @Override
     public void update(Observable o, Object arg) {
-        if(o instanceof Pigeon){
+        if (o instanceof Pigeon) {
             executor.submit(() -> {
-                Pigeon p = (Pigeon)arg;
-                System.out.println("Pigeon " + p.getId() + " ; posX : " + p.getPosX()+ " ; posY : " + p.getPosY());
+                Pigeon p = (Pigeon) arg;
+                System.out.println("Pigeon " + p.getId() + " ; posX : " + p.getPosX() + " ; posY : " + p.getPosY());
             });
         }
     }
