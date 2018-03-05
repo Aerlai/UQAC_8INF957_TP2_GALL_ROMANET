@@ -44,16 +44,6 @@ public class Pigeon extends Observable implements Runnable, Observer {
         System.out.println("Création d'un thread pour pigeon " + id);
         this.setChanged();
         this.notifyObservers(this);
-/*        synchronized (this) {
-            while (true) {
-                try {
-                    this.wait(vitesse);
-                    //System.out.println("test");
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }*/
     }
 
     private void rechercherNourriture() {
