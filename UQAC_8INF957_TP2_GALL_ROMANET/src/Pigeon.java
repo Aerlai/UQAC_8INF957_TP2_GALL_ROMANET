@@ -11,9 +11,12 @@ public class Pigeon extends Observable implements Runnable, Observer {
     private int posY;
     private int id;
     private ArrayList<Nourriture> nourritureTab = new ArrayList();
+    private int numNourriture;
+    private boolean aMange = false;
     private int vitesse = 100;
     private ExecutorService executor = Executors.newSingleThreadExecutor();
     private boolean rechercheActive = false;
+
 
     // Constructeur
     Pigeon(int x, int y, int id, PigeonSquare parent) {
@@ -36,6 +39,14 @@ public class Pigeon extends Observable implements Runnable, Observer {
         return id;
     }
 
+    public int getNumNourriture() {
+        return numNourriture;
+    }
+
+    public boolean getAMange() {
+        return aMange;
+    }
+
     // Setters
 
     // Methodes
@@ -50,6 +61,7 @@ public class Pigeon extends Observable implements Runnable, Observer {
         // On vérifie si il y a de la nourriture de disponible
         int xCible;
         int yCible;
+        int numNourriture = 0;
         do {
             // Choix de la nouriture la plus proche
             int curseur = 0;
@@ -59,6 +71,7 @@ public class Pigeon extends Observable implements Runnable, Observer {
                 if (v < distance) { // si la nourriture est plus proche on sauvegarde
                     curseur = i;
                     distance = v;
+                    numNourriture = i;
                 }
             }
 
@@ -66,16 +79,23 @@ public class Pigeon extends Observable implements Runnable, Observer {
             xCible = nourritureTab.get(curseur).getPosX();
             yCible = nourritureTab.get(curseur).getPosY();
 
-                deplacerPigeonPas(xCible, yCible);
-                this.setChanged();
-                this.notifyObservers(this);
-                try {
-                    Thread.sleep(vitesse);
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                }
-            }while (this.posX != xCible || this.posY != yCible); // TODO : ajouter une condition nourriture gatée
-            rechercheActive = false;
+            deplacerPigeonPas(xCible, yCible);
+            this.setChanged();
+            this.notifyObservers(this);
+            try {
+                Thread.sleep(vitesse);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+        } while (this.posX != xCible || this.posY != yCible); // TODO : ajouter une condition nourriture gatée
+        if (this.posX == xCible || this.posY == yCible) {
+            aMange = true;
+            this.setChanged();
+            this.notifyObservers(this);
+            nourritureTab.remove(numNourriture);
+            aMange = false;
+        }
+        rechercheActive = false;
     }
 
     // Fonction de recherche du pigeon le plus proche.
@@ -99,12 +119,14 @@ public class Pigeon extends Observable implements Runnable, Observer {
     @Override
     public void update(Observable o, Object arg) {
         if (o instanceof PigeonSquare) {
-            nourritureTab.add((Nourriture) arg);
-            if(rechercheActive == false){
-                rechercheActive = true;
-                executor.submit(() -> {
-                    rechercherNourriture();
-                });
+            nourritureTab = (ArrayList<Nourriture>) arg;
+            if (nourritureTab.size() > 0) {
+                if (rechercheActive == false) {
+                    rechercheActive = true;
+                    executor.submit(() -> {
+                        rechercherNourriture();
+                    });
+                }
             }
 
         }

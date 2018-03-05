@@ -2,6 +2,7 @@ public class Nourriture {
     // Attributs
     private int posX; // position X sur le canvas
     private int posY; // position Y sur le canvas
+    private boolean mange = false;
     private double dureDeVie = 3.0; // Durée de vie de 3 secondes
 
     // Constructeur
@@ -24,5 +25,9 @@ public class Nourriture {
     // Setter
 
     // Methode
+    public void estMange(){
+        mange = true;
+        System.out.println("nourriture mangé : " + posX + ";" + posY);
+    }
 
 }

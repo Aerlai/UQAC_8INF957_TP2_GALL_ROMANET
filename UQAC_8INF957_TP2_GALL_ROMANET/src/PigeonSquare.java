@@ -54,7 +54,7 @@ public class PigeonSquare extends Observable implements Observer {
     public void ajouterNourriture(int x, int y) {
         nourritureTab.add(new Nourriture(x, y));
         this.setChanged();
-        this.notifyObservers(nourritureTab.get(nourritureTab.size() - 1));
+        this.notifyObservers(nourritureTab);
     }
 
     // Observer
@@ -64,6 +64,11 @@ public class PigeonSquare extends Observable implements Observer {
             executor.submit(() -> {
                 Pigeon p = (Pigeon) arg;
                 System.out.println("Pigeon " + p.getId() + " ; posX : " + p.getPosX() + " ; posY : " + p.getPosY());
+                if(p.getAMange() == true){
+                    nourritureTab.remove(p.getNumNourriture());
+                    this.setChanged();
+                    this.notifyObservers(nourritureTab);
+                }
             });
         }
     }
