@@ -62,6 +62,7 @@ public class Pigeon extends Observable implements Runnable, Observer {
         int xCible;
         int yCible;
         int numNourriture = 0;
+        boolean gate = false;
         do {
             // Choix de la nouriture la plus proche
             int curseur = 0;
@@ -72,6 +73,7 @@ public class Pigeon extends Observable implements Runnable, Observer {
                     curseur = i;
                     distance = v;
                     numNourriture = i;
+                    gate = nourritureTab.get(i).isGate();
                 }
             }
 
@@ -87,8 +89,8 @@ public class Pigeon extends Observable implements Runnable, Observer {
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
-        } while (this.posX != xCible || this.posY != yCible); // TODO : ajouter une condition nourriture gatée
-        if (this.posX == xCible || this.posY == yCible) {
+        } while ((this.posX != xCible || this.posY != yCible )&& gate == false); // TODO : ajouter une condition nourriture gatée
+        if ((this.posX == xCible && this.posY == yCible) && gate == false) {
             aMange = true;
             this.setChanged();
             this.notifyObservers(this);
@@ -121,7 +123,12 @@ public class Pigeon extends Observable implements Runnable, Observer {
         if (o instanceof PigeonSquare) {
             nourritureTab = (ArrayList<Nourriture>) arg;
             if (nourritureTab.size() > 0) {
-                if (rechercheActive == false) {
+                // On vérifie si au moins une nourriture n'est pas gatée
+                boolean testNourriture = true;
+                for(int i=0; i<nourritureTab.size();i++){
+                    if(nourritureTab.get(i).isGate() == false && testNourriture == true) testNourriture =false;
+                }
+                if (rechercheActive == false && testNourriture == false) {
                     rechercheActive = true;
                     executor.submit(() -> {
                         rechercherNourriture();

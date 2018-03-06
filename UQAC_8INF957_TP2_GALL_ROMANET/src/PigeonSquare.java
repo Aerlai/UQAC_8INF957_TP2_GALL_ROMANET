@@ -14,7 +14,7 @@ public class PigeonSquare extends Observable implements Observer {
     private ArrayList<Nourriture> nourritureTab = new ArrayList();
     private ArrayList<Pigeon> pigeonTab = new ArrayList();
     private ArrayList<Thread> threadTab = new ArrayList();
-    private ExecutorService executor = Executors.newSingleThreadExecutor();
+    private ExecutorService executor = Executors.newFixedThreadPool(2);
 
     // Getters
 
@@ -25,8 +25,29 @@ public class PigeonSquare extends Observable implements Observer {
 
         creerPigeonThread(nombreDePigeon);
 
+        // Gestion de la duree de ve de la nourriture
+        executor.submit(() -> {
+            while (true) {
+                if (nourritureTab.size() > 0) {
+                    for (int i = 0; i < nourritureTab.size(); i++) {
+                        nourritureTab.get(i).temps();
+                        this.setChanged();
+                        this.notifyObservers(nourritureTab);
+                        if (nourritureTab.get(i).getDureDeVie() == -5) {
+                            nourritureTab.remove(i);
+                        }
+                    }
 
+                }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
+
 
     private void creerPigeonThread(int nbrePigeon) {
         Random ran = new Random();
@@ -35,6 +56,7 @@ public class PigeonSquare extends Observable implements Observer {
             int y = ran.nextInt(tailleY) + 0;
             pigeonTab.add(new Pigeon(x, y, i, this));
             pigeonTab.get(i).addObserver(this);
+            // 2 façon de créer des threads soit par java.util.thread soit par l'executor
             threadTab.add(new Thread(pigeonTab.get(i)));
             threadTab.get(i).start();
             //executor.execute(pigeonTab.get(i));
@@ -46,13 +68,23 @@ public class PigeonSquare extends Observable implements Observer {
             ajouterNourriture(0, 0);
         });
         executor.submit(() -> {
-            ajouterNourriture(100, 100);
+            ajouterNourriture(100, 100, 8);
         });
     }
 
     // Methode
+    // Ajouter une nourriture avec une durée de vie de 3 secondes
     public void ajouterNourriture(int x, int y) {
         nourritureTab.add(new Nourriture(x, y));
+        int n = nourritureTab.size();
+        this.setChanged();
+        this.notifyObservers(nourritureTab);
+    }
+
+    // Ajouter une nourriture avec une durée de vie précise
+    public void ajouterNourriture(int x, int y, int vie) {
+        nourritureTab.add(new Nourriture(x, y, vie));
+        int n = nourritureTab.size();
         this.setChanged();
         this.notifyObservers(nourritureTab);
     }
