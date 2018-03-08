@@ -1,3 +1,8 @@
+package Model;
+
+import Model.Nourriture;
+import Model.PigeonSquare;
+
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;

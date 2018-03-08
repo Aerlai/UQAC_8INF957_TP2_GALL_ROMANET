@@ -1,3 +1,8 @@
+package View;
+
+import Model.Nourriture;
+import Model.Pigeon;
+import Model.PigeonSquare;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -25,7 +30,7 @@ public class InterfaceUtilisateur extends JFrame implements Observer, ActionList
         pigeonsquare.addObserver(this);
         casesNonvvides = new ArrayList<>();
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setTitle("PigeonSquare");
+        setTitle("Model.PigeonSquare");
         this.setSize(1000, 700);
         tailleX = pigeonsquare.getTailleX();
         tailleY = pigeonsquare.getTailleY();
@@ -77,7 +82,7 @@ public class InterfaceUtilisateur extends JFrame implements Observer, ActionList
 
     public void updatemap(PigeonSquare ps){
 
-       /* for(CaseGraphique cg : casesNonvvides){
+       /* for(View.CaseGraphique cg : casesNonvvides){
             paintCase(cg,0);
             cg.validate();
             cg.repaint();

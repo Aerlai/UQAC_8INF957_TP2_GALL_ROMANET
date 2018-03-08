@@ -1,3 +1,5 @@
+package Model;
+
 public class Nourriture {
     // Attributs
     private int posX; // position X sur le canvas
@@ -43,7 +45,7 @@ public class Nourriture {
     // Methode
     public void estMange(){
         mange = true;
-        System.out.println("Nourriture mangée : " + posX + ";" + posY);
+        System.out.println("Model.Nourriture mangée : " + posX + ";" + posY);
     }
 
     public void temps(){

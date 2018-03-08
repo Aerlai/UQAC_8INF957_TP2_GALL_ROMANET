@@ -1,3 +1,5 @@
+package Model;
+
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -127,7 +129,7 @@ public class PigeonSquare extends Observable implements Observer {
         if (o instanceof Pigeon) {
             executor.submit(() -> {
                 Pigeon p = (Pigeon) arg;
-                System.out.println("Pigeon " + p.getId() + " ; posX : " + p.getPosX() + " ; posY : " + p.getPosY());
+                System.out.println("Model.Pigeon " + p.getId() + " ; posX : " + p.getPosX() + " ; posY : " + p.getPosY());
                 if(p.getAMange() == true){
                     nourritureTab.remove(p.getNumNourriture());
                     this.setChanged();
