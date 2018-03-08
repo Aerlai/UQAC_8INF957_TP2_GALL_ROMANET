@@ -4,7 +4,7 @@ public class Nourriture {
     private int posY; // position Y sur le canvas
     private boolean mange = false;
     private boolean gate = false;
-    private int dureDeVie = 3; // Durée de vie de 3 secondes
+    private int dureDeVie = 100; // Durée de vie de 3 secondes
 
     // Constructeur
     public Nourriture(int x, int y){
@@ -43,7 +43,7 @@ public class Nourriture {
     // Methode
     public void estMange(){
         mange = true;
-        System.out.println("nourriture mangé : " + posX + ";" + posY);
+        System.out.println("Nourriture mangée : " + posX + ";" + posY);
     }
 
     public void temps(){

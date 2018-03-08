@@ -28,17 +28,19 @@ public class PigeonSquare extends Observable implements Observer {
         // Gestion de la duree de ve de la nourriture
         executor.submit(() -> {
             while (true) {
+
                 if (nourritureTab.size() > 0) {
                     for (int i = 0; i < nourritureTab.size(); i++) {
                         nourritureTab.get(i).temps();
                         this.setChanged();
-                        this.notifyObservers(nourritureTab);
                         if (nourritureTab.get(i).getDureDeVie() == -5) {
                             nourritureTab.remove(i);
                         }
                     }
 
                 }
+                this.notifyObservers(this);
+
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
@@ -48,6 +50,33 @@ public class PigeonSquare extends Observable implements Observer {
         });
     }
 
+    public int getTailleX() {
+        return tailleX;
+    }
+
+    public void setTailleX(int tailleX) {
+        this.tailleX = tailleX;
+    }
+
+    public int getTailleY() {
+        return tailleY;
+    }
+
+    public void setTailleY(int tailleY) {
+        this.tailleY = tailleY;
+    }
+
+    public int getNombreDePigeon() {
+        return nombreDePigeon;
+    }
+
+    public ArrayList<Nourriture> getNourritureTab() {
+        return nourritureTab;
+    }
+
+    public ArrayList<Pigeon> getPigeonTab() {
+        return pigeonTab;
+    }
 
     private void creerPigeonThread(int nbrePigeon) {
         Random ran = new Random();
@@ -60,6 +89,8 @@ public class PigeonSquare extends Observable implements Observer {
             threadTab.add(new Thread(pigeonTab.get(i)));
             threadTab.get(i).start();
             //executor.execute(pigeonTab.get(i));
+            this.notifyObservers(this);
+
         }
     }
 
@@ -68,7 +99,7 @@ public class PigeonSquare extends Observable implements Observer {
             ajouterNourriture(0, 0);
         });
         executor.submit(() -> {
-            ajouterNourriture(100, 100, 8);
+            ajouterNourriture(99, 99, 8);
         });
     }
 
@@ -78,7 +109,8 @@ public class PigeonSquare extends Observable implements Observer {
         nourritureTab.add(new Nourriture(x, y));
         int n = nourritureTab.size();
         this.setChanged();
-        this.notifyObservers(nourritureTab);
+        this.notifyObservers(this);
+
     }
 
     // Ajouter une nourriture avec une durée de vie précise
@@ -86,7 +118,7 @@ public class PigeonSquare extends Observable implements Observer {
         nourritureTab.add(new Nourriture(x, y, vie));
         int n = nourritureTab.size();
         this.setChanged();
-        this.notifyObservers(nourritureTab);
+        this.notifyObservers(this);
     }
 
     // Observer
@@ -99,9 +131,10 @@ public class PigeonSquare extends Observable implements Observer {
                 if(p.getAMange() == true){
                     nourritureTab.remove(p.getNumNourriture());
                     this.setChanged();
-                    this.notifyObservers(nourritureTab);
                 }
             });
         }
+        this.notifyObservers(this);
+
     }
 }

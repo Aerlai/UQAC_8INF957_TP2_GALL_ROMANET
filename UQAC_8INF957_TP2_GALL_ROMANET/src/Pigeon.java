@@ -13,7 +13,7 @@ public class Pigeon extends Observable implements Runnable, Observer {
     private ArrayList<Nourriture> nourritureTab = new ArrayList();
     private int numNourriture;
     private boolean aMange = false;
-    private int vitesse = 100;
+    private int vitesse = 1000;
     private ExecutorService executor = Executors.newSingleThreadExecutor();
     private boolean rechercheActive = false;
 
@@ -115,13 +115,15 @@ public class Pigeon extends Observable implements Runnable, Observer {
             if (this.posY < yCible) this.posY++;
             else this.posY--;
         }
+        notifyObservers(this);
     }
 
     // Observer
     @Override
     public void update(Observable o, Object arg) {
         if (o instanceof PigeonSquare) {
-            nourritureTab = (ArrayList<Nourriture>) arg;
+            PigeonSquare ps = (PigeonSquare) arg;
+            nourritureTab = ps.getNourritureTab();
             if (nourritureTab.size() > 0) {
                 // On vérifie si au moins une nourriture n'est pas gatée
                 boolean testNourriture = true;
