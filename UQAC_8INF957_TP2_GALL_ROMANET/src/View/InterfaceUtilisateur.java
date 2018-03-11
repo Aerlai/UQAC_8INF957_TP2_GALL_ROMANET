@@ -9,6 +9,8 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import javax.swing.*;
 import javax.swing.border.Border;
 
@@ -17,6 +19,7 @@ public class InterfaceUtilisateur extends JFrame implements MouseListener, Runna
     int tailleX;
     int tailleY;
     PigeonSquare pigeonsquare;
+    private ExecutorService executor = Executors.newSingleThreadExecutor();
 
 
     // swing
@@ -49,8 +52,9 @@ public class InterfaceUtilisateur extends JFrame implements MouseListener, Runna
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        System.out.println("test " + e.getX() + " " + e.getY());
-        pigeonsquare.ajouterNourriture(e.getX(),e.getY());
+        executor.submit(()->{
+            pigeonsquare.ajouterNourriture(e.getX(),e.getY(), 3);
+        });
     }
 
     @Override

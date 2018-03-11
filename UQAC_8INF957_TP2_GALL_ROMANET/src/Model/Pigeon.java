@@ -94,7 +94,7 @@ public class Pigeon extends Observable implements Runnable, Observer {
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
-        } while ((this.posX != xCible || this.posY != yCible )&& gate == false); // TODO : ajouter une condition nourriture gatée
+        } while ((this.posX != xCible || this.posY != yCible )&& gate == false);
         if ((this.posX == xCible && this.posY == yCible) && gate == false) {
             aMange = true;
             this.setChanged();

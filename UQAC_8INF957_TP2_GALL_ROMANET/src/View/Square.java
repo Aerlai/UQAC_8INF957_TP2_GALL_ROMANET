@@ -37,8 +37,14 @@ public class Square extends JPanel {
     public void dessinerNourritures(Graphics g){
         ArrayList<Nourriture> nourritures = ps.getNourritureTab();
         for (int i=0; i<nourritures.size(); i++){
+            if (nourritures.get(i).isGate() == true){
+                g.setColor(Color.orange);
+                g.fillOval(nourritures.get(i).getPosX(), nourritures.get(i).getPosY(), 10, 10);
+            }
+            if (nourritures.get(i).isGate() == false){
             g.setColor(Color.green);
             g.fillOval(nourritures.get(i).getPosX(), nourritures.get(i).getPosY(), 10, 10);
+            }
         }
     }
 }
