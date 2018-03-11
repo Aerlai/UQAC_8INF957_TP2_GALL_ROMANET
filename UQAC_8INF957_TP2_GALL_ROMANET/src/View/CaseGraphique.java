@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class CaseGraphique extends JPanel {
+public class CaseGraphique extends JPanel{
 
     int[] id;
     InterfaceUtilisateur interfaceUtilisateur;
@@ -36,6 +36,8 @@ public class CaseGraphique extends JPanel {
             @Override
             public void mousePressed(MouseEvent arg0) {
                 System.out.println(id[0] +"   "+ id[1]);
+                interfaceUtilisateur.pigeonsquare.ajouterNourriture(id[0],id[1]);
+                interfaceUtilisateur.updatemap(interfaceUtilisateur.pigeonsquare);
             }
         });
     }

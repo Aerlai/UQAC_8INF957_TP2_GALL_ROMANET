@@ -16,6 +16,7 @@ public class InterfaceUtilisateur extends JFrame implements Observer, ActionList
 
     int tailleX;
     int tailleY;
+    PigeonSquare pigeonsquare;
 
     CaseGraphique[][] cases ;
     ArrayList<CaseGraphique> casesNonvvides;
@@ -25,12 +26,13 @@ public class InterfaceUtilisateur extends JFrame implements Observer, ActionList
     boolean fin; //indicateur si la simulation est terminée ou non
 
 
-    public InterfaceUtilisateur(PigeonSquare pigeonsquare){
+    public InterfaceUtilisateur(PigeonSquare ps){
 
+        pigeonsquare=ps;
         pigeonsquare.addObserver(this);
         casesNonvvides = new ArrayList<>();
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setTitle("Model.PigeonSquare");
+        setTitle("PigeonSquare");
         this.setSize(1000, 700);
         tailleX = pigeonsquare.getTailleX();
         tailleY = pigeonsquare.getTailleY();
@@ -107,6 +109,9 @@ public class InterfaceUtilisateur extends JFrame implements Observer, ActionList
             cases[n.getPosX()][n.getPosY()].repaint();
            // casesNonvvides.add(cases[n.getPosX()][n.getPosY()]);
         }
+    }
+
+    public void ajouterNourriture(){
     }
 
     @Override
