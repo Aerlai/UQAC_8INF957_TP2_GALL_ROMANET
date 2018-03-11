@@ -12,7 +12,7 @@ import java.util.Observer;
 import javax.swing.*;
 import javax.swing.border.Border;
 
-public class InterfaceUtilisateur extends JFrame implements ActionListener, Runnable {
+public class InterfaceUtilisateur extends JFrame implements MouseListener, Runnable {
 
     int tailleX;
     int tailleY;
@@ -31,12 +31,8 @@ public class InterfaceUtilisateur extends JFrame implements ActionListener, Runn
         setTitle("PigeonSquare");
         this.setSize(tailleX+100, tailleY+100);
         setContentPane(jc);
+        addMouseListener(this);
         this.setVisible(true);
-    }
-
-    //@Override
-    public void actionPerformed(ActionEvent e) {
-
     }
 
     @Override
@@ -49,6 +45,32 @@ public class InterfaceUtilisateur extends JFrame implements ActionListener, Runn
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        System.out.println("test " + e.getX() + " " + e.getY());
+        pigeonsquare.ajouterNourriture(e.getX(),e.getY());
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
     }
 }
 
