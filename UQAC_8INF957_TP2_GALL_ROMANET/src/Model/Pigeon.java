@@ -18,7 +18,7 @@ public class Pigeon extends Observable implements Runnable, Observer {
     private ArrayList<Nourriture> nourritureTab = new ArrayList();
     private int numNourriture;
     private boolean aMange = false;
-    private int vitesse = 1000;
+    private int vitesse = 10;
     private ExecutorService executor = Executors.newSingleThreadExecutor();
     private boolean rechercheActive = false;
 

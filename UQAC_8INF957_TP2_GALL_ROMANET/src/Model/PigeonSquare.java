@@ -11,8 +11,8 @@ import java.util.concurrent.Executors;
 public class PigeonSquare extends Observable implements Observer {
     // Attributs
     private int nombreDePigeon = 2;
-    private int tailleX = 100; // taille du square en X
-    private int tailleY = 100; // taille du square en Y
+    private int tailleX = 500; // taille du square en X
+    private int tailleY = 500; // taille du square en Y
     private ArrayList<Nourriture> nourritureTab = new ArrayList();
     private ArrayList<Pigeon> pigeonTab = new ArrayList();
     private ArrayList<Thread> threadTab = new ArrayList();
@@ -101,7 +101,7 @@ public class PigeonSquare extends Observable implements Observer {
             ajouterNourriture(0, 0);
         });
         executor.submit(() -> {
-            ajouterNourriture(99, 99, 8);
+            ajouterNourriture(500, 500, 8);
         });
     }
 
