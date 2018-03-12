@@ -136,7 +136,8 @@ public class Pigeon extends Observable implements Runnable, Observer {
                 for(int i=0; i<nourritureTab.size();i++){
                     if(nourritureTab.get(i).isGate() == false && testNourriture == true) testNourriture =false;
                 }
-                if (rechercheActive == false && testNourriture == false) {
+                if (/*rechercheActive == false &&*/ testNourriture == false) {
+                    //System.out.println(id + " recoit un update");
                     rechercheActive = true;
                     executor.submit(() -> {
                         rechercherNourriture();

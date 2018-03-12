@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
 
 public class PigeonSquare extends Observable implements Observer {
     // Attributs
-    private int nombreDePigeon = 2;
+    private int nombreDePigeon = 5;
     private int tailleX = 500; // taille du square en X
     private int tailleY = 500; // taille du square en Y
     private ArrayList<Nourriture> nourritureTab = new ArrayList();
