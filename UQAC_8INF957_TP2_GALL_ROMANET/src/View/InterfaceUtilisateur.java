@@ -15,18 +15,16 @@ import javax.swing.*;
 import javax.swing.border.Border;
 
 public class InterfaceUtilisateur extends JFrame implements MouseListener, Runnable {
-
-    int tailleX;
-    int tailleY;
+    // Variables
+    int tailleX; // taille du square en x
+    int tailleY; // taille du square en x
     PigeonSquare pigeonsquare;
     private ExecutorService executor = Executors.newSingleThreadExecutor();
+    JComponent jc; // Jpanel de l'affichage
 
-
-    // swing
-    JComponent jc;
-
+    // Constructeur
     public InterfaceUtilisateur(PigeonSquare ps){
-        pigeonsquare = ps;
+        pigeonsquare = ps; // On récupèreles données directement
         jc = new Square(pigeonsquare);
         tailleX = ps.getTailleX();
         tailleY = ps.getTailleY();
@@ -38,7 +36,10 @@ public class InterfaceUtilisateur extends JFrame implements MouseListener, Runna
         this.setVisible(true);
     }
 
+    // Methodes
+
     @Override
+    // Fonction appellée à la création du thread
     public void run() {
         while(true){
             jc.repaint();
@@ -50,6 +51,7 @@ public class InterfaceUtilisateur extends JFrame implements MouseListener, Runna
         }
     }
 
+    // On capture les evenements click souris pour créer des nourritures
     @Override
     public void mouseClicked(MouseEvent e) {
         executor.submit(()->{

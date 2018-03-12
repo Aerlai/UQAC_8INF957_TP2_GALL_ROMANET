@@ -19,12 +19,33 @@ public class PigeonSquare extends Observable implements Observer {
     private ExecutorService executor = Executors.newFixedThreadPool(2);
 
     // Getters
+    public int getTailleX() {
+        return tailleX;
+    }
+    public int getTailleY() {
+        return tailleY;
+    }
+    public int getNombreDePigeon() {
+        return nombreDePigeon;
+    }
+    public ArrayList<Nourriture> getNourritureTab() {
+        return nourritureTab;
+    }
+    public ArrayList<Pigeon> getPigeonTab() {
+        return pigeonTab;
+    }
 
     // Setter
+    public void setTailleX(int tailleX) {
+        this.tailleX = tailleX;
+    }
+    public void setTailleY(int tailleY) {
+        this.tailleY = tailleY;
+    }
 
     // Constructeur
     public PigeonSquare() {
-
+        // On créer les pigeons et les threads associés
         creerPigeonThread(nombreDePigeon);
 
         // Gestion de la duree de ve de la nourriture
@@ -52,34 +73,9 @@ public class PigeonSquare extends Observable implements Observer {
         });
     }
 
-    public int getTailleX() {
-        return tailleX;
-    }
+    // Methodes
 
-    public void setTailleX(int tailleX) {
-        this.tailleX = tailleX;
-    }
-
-    public int getTailleY() {
-        return tailleY;
-    }
-
-    public void setTailleY(int tailleY) {
-        this.tailleY = tailleY;
-    }
-
-    public int getNombreDePigeon() {
-        return nombreDePigeon;
-    }
-
-    public ArrayList<Nourriture> getNourritureTab() {
-        return nourritureTab;
-    }
-
-    public ArrayList<Pigeon> getPigeonTab() {
-        return pigeonTab;
-    }
-
+    // On créer des pigeons puis on les associe à des threads
     private void creerPigeonThread(int nbrePigeon) {
         Random ran = new Random();
         for (int i = 0; i < nbrePigeon; i++) {
@@ -96,6 +92,7 @@ public class PigeonSquare extends Observable implements Observer {
         }
     }
 
+    // fonction de démarrage de thread
     public void start() {
         executor.submit(() -> {
             ajouterNourriture(0, 0);
@@ -105,7 +102,6 @@ public class PigeonSquare extends Observable implements Observer {
         });
     }
 
-    // Methode
     // Ajouter une nourriture avec une durée de vie de 3 secondes
     public void ajouterNourriture(int x, int y) {
         nourritureTab.add(new Nourriture(x, y));
@@ -129,7 +125,9 @@ public class PigeonSquare extends Observable implements Observer {
         if (o instanceof Pigeon) {
             executor.submit(() -> {
                 Pigeon p = (Pigeon) arg;
+                //décommenter cette ligne pour voir le parcour des pigeons dans la console
                 //System.out.println("Model.Pigeon " + p.getId() + " ; posX : " + p.getPosX() + " ; posY : " + p.getPosY());
+                // Si la nourriture a été mangé on la supprime
                 if(p.getAMange() == true){
                     nourritureTab.remove(p.getNumNourriture());
                     this.setChanged();
