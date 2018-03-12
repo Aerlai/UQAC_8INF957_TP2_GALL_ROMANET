@@ -74,21 +74,22 @@ public class Pigeon extends Observable implements Runnable, Observer {
             double distance = 99999999; // On initialise à l'infini
             for (int i = 0; i < nourritureTab.size(); i++) {
                 double v = calculDistance(this.posX, this.posY, nourritureTab.get(i).getPosX(), nourritureTab.get(i).getPosY()); // Calcul de la distance entre le pigeon et une nourriture
-                if (v < distance) { // si la nourriture est plus proche on sauvegarde
+                if (v < distance && nourritureTab.get(i).isGate() == false) { // si la nourriture est plus proche on sauvegarde
                     curseur = i;
                     distance = v;
                     numNourriture = i;
-                    gate = nourritureTab.get(i).isGate();
                 }
+                gate = nourritureTab.get(i).isGate();
             }
 
             // On dirige le pigeon vers la nourriture
             xCible = nourritureTab.get(curseur).getPosX();
             yCible = nourritureTab.get(curseur).getPosY();
-
-            deplacerPigeonPas(xCible, yCible);
-            this.setChanged();
-            this.notifyObservers(this);
+            if(gate == false){
+                deplacerPigeonPas(xCible, yCible);
+                this.setChanged();
+                this.notifyObservers(this);
+            }
             try {
                 Thread.sleep(vitesse);
             } catch (InterruptedException ex) {
